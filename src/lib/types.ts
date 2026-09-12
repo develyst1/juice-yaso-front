@@ -70,6 +70,7 @@ export type AdminOrder = {
   productTotal: number;
   depositTotal: number;
   slipRejectReason: string | null;
+  pendingSlipId?: string | null;
   createdAt: string;
   updatedAt: string;
 };

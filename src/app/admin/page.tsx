@@ -67,6 +67,11 @@ export default function AdminPage() {
       setOrders(list.orders);
       setPricing(p);
       setPay(ch);
+      const prefill: Record<string, string> = {};
+      for (const o of list.orders) {
+        if (o.pendingSlipId) prefill[o.orderId] = o.pendingSlipId;
+      }
+      setSlipIds((m) => ({ ...prefill, ...m }));
       setInfo(`โหลด ${list.orders.length} ออเดอร์`);
     } catch (e) {
       setError(e instanceof Error ? e.message : "โหลดไม่สำเร็จ");
@@ -87,8 +92,7 @@ export default function AdminPage() {
     <div className="space-y-5">
       <h1 className="text-2xl font-bold text-orange-700">แอดมินร้าน</h1>
       <p className="text-sm text-orange-900/70">
-        ใส่โทเคนในเครื่องนี้เท่านั้น ไม่เก็บใน repo · ลิสต์ออเดอร์ไม่มี slipId จาก API
-        (ช่องกรอกด้านล่าง)
+        ใส่โทเคนในเครื่องนี้เท่านั้น ไม่เก็บใน repo · ใช้ pendingSlipId จาก API เมื่อมี
       </p>
 
       {error && <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
@@ -134,8 +138,8 @@ export default function AdminPage() {
               <div className="space-y-2 rounded-xl bg-orange-50 p-3">
                 <input
                   className="field"
-                  placeholder="slipId จาก back"
-                  value={slipIds[o.orderId] ?? ""}
+                  placeholder="slipId (auto จาก pendingSlipId)"
+                  value={slipIds[o.orderId] ?? o.pendingSlipId ?? ""}
                   onChange={(e) =>
                     setSlipIds((m) => ({ ...m, [o.orderId]: e.target.value }))
                   }
@@ -153,7 +157,7 @@ export default function AdminPage() {
                     type="button"
                     className="btn btn-primary"
                     onClick={() =>
-                      act(() => adminApproveSlip(token, slipIds[o.orderId] ?? ""))
+                      act(() => adminApproveSlip(token, slipIds[o.orderId] ?? o.pendingSlipId ?? ""))
                     }
                   >
                     อนุมัติสลิป
@@ -165,7 +169,7 @@ export default function AdminPage() {
                       act(() =>
                         adminRejectSlip(
                           token,
-                          slipIds[o.orderId] ?? "",
+                          slipIds[o.orderId] ?? o.pendingSlipId ?? "",
                           reasons[o.orderId] ?? "",
                         ),
                       )

@@ -26,4 +26,4 @@ npm run dev
 แอดมิน: ใส่ `ADMIN_TOKEN` ของ back ในช่องบน `/admin` (เก็บใน sessionStorage เท่านั้น)
 
 ## ช่องว่างสัญญา
-`GET /api/v1/admin/orders` ไม่คืน `slipId` — แอดมินกรอก slipId จาก back ตอนอนุมัติ/ปฏิเสธ ไม่ได้ invent endpoint ใหม่
+`GET /api/v1/admin/orders` คืน `pendingSlipId` (หลัง back PR #2) — แอดมินใช้ค่านี้ตอนอนุมัติ/ปฏิเสธ
