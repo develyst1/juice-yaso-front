@@ -1,72 +1,9 @@
-@import "tailwindcss";
-
-:root {
-  --background: #fff7ed;
-  --foreground: #431407;
-  --orange: #ea580c;
-  --orange-dark: #c2410c;
-  --card: #ffffff;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-orange: var(--orange);
-  --font-sans: var(--font-thai);
+html, body {
+  min-height: 100%;
+  background: #fff7ed;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
   font-family: var(--font-thai), "Noto Sans Thai", sans-serif;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.75rem;
-  padding: 0.65rem 1rem;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: 0.15s;
-}
-.btn-primary {
-  background: var(--orange);
-  color: white;
-}
-.btn-primary:hover { background: var(--orange-dark); }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-.btn-ghost {
-  background: white;
-  border: 1px solid #fed7aa;
-  color: #9a3412;
-}
-.btn-danger {
-  background: #dc2626;
-  color: white;
-}
-.field {
-  width: 100%;
-  border: 1px solid #fdba74;
-  border-radius: 0.75rem;
-  padding: 0.65rem 0.8rem;
-  background: white;
   color: #431407;
-}
-.card {
-  background: var(--card);
-  border: 1px solid #fed7aa;
-  border-radius: 1.25rem;
-  padding: 1.25rem;
-  box-shadow: 0 8px 24px rgba(234, 88, 12, 0.08);
-}
-.badge {
-  display: inline-flex;
-  border-radius: 999px;
-  padding: 0.2rem 0.7rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  background: #ffedd5;
-  color: #9a3412;
 }
