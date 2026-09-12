@@ -32,6 +32,17 @@ export type Catalog = {
   paymentChannel: PaymentChannel;
 };
 
+export type CrateFill = {
+  flavor: string;
+  cups: number;
+};
+
+export type OrderCrate = {
+  crateSize: number;
+  deposit?: number;
+  fills: CrateFill[];
+};
+
 export type OrderLine = {
   crateSize: number;
   quantity: number;
@@ -51,7 +62,8 @@ export type QueueOrder = {
   depositTotal: number;
   unitPriceApplied: number;
   slipRejectReason: string | null;
-  lines: OrderLine[];
+  lines?: OrderLine[];
+  crates?: OrderCrate[];
   paymentChannel?: PaymentChannel;
   createdAt: string;
   updatedAt: string;

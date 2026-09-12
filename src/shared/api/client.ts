@@ -40,7 +40,7 @@ export function getCatalog(): Promise<Catalog> {
 export function createOrder(body: {
   customerName: string;
   customerPhone: string;
-  lines: { crateSize: number; quantity: number; flavor: string }[];
+  crates: { crateSize: number; fills: { flavor: string; cups: number }[] }[];
 }): Promise<{
   orderId: string;
   queueCode: string;
