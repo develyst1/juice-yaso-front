@@ -19,13 +19,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="th" className={`${thai.variable} h-full`}>
+    <html lang="th" className={`${thai.variable} h-full`} suppressHydrationWarning>
       <head>
-        <ColorSchemeScript />
+        <ColorSchemeScript defaultColorScheme="light" />
       </head>
       <body>
-        <MantineProvider theme={theme}>
-          <div style={{ maxWidth: 840, margin: "0 auto", padding: "0 16px" }}>
+        <MantineProvider theme={theme} defaultColorScheme="light">
+          <div style={{ maxWidth: 840, margin: "0 auto", padding: "0 16px 32px" }}>
             <BrandHeader />
             {children}
           </div>

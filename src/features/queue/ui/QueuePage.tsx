@@ -144,8 +144,13 @@ export function QueuePage() {
             {order.customerName} · {order.customerPhone}
           </Text>
           <List size="sm" spacing={4}>
-            {order.lines.map((l, i) => (
-              <List.Item key={i}>
+            {(order.crates ?? []).map((c, i) => (
+              <List.Item key={`c${i}`}>
+                ลัง {c.crateSize} · {c.fills.map((f) => `${f.flavor} ${f.cups}`).join(" + ")}
+              </List.Item>
+            ))}
+            {(order.lines ?? []).map((l, i) => (
+              <List.Item key={`l${i}`}>
                 ลัง {l.crateSize} × {l.quantity} · {l.flavor} ({l.lineCups} แก้ว)
               </List.Item>
             ))}
