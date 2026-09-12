@@ -11,6 +11,7 @@ import {
   FileButton,
   Group,
   List,
+  Modal,
   Stack,
   Text,
   Title,
@@ -39,12 +40,17 @@ export function QueuePage() {
   const [notFound, setNotFound] = useState(false);
   const [busy, setBusy] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [cancelOpen, setCancelOpen] = useState(false);
+
+  async function loadCode(code: string) {
+    const o = await getQueue(code);
+    setOrder(o);
+    setNotFound(false);
+  }
 
   async function refresh() {
     try {
-      const o = await getQueue(queueCode);
-      setOrder(o);
-      setNotFound(false);
+      await loadCode(queueCode);
     } catch (e) {
       const status = (e as Error & { status?: number }).status;
       if (status === 404) setNotFound(true);
@@ -72,13 +78,14 @@ export function QueuePage() {
     }
   }
 
-  async function onCancel() {
-    if (!confirm("ยกเลิกออเดอร์นี้?")) return;
+  async function confirmCancel() {
+    const code = queueCode;
     setBusy(true);
     setError(null);
     try {
-      await cancelQueue(queueCode);
-      await refresh();
+      await cancelQueue(code);
+      setCancelOpen(false);
+      await loadCode(code);
     } catch (err) {
       setError(err instanceof Error ? err.message : "ยกเลิกไม่ได้");
     } finally {
@@ -219,16 +226,42 @@ export function QueuePage() {
           </Button>
           {CANCELABLE.has(order.status) && (
             <Button
+              type="button"
               color="red"
               leftSection={<IconX size={16} />}
-              loading={busy}
-              onClick={() => void onCancel()}
+              onClick={() => setCancelOpen(true)}
             >
               ยกเลิกออเดอร์
             </Button>
           )}
         </Group>
       </Stack>
+
+      <Modal
+        opened={cancelOpen}
+        onClose={() => !busy && setCancelOpen(false)}
+        title="ยกเลิกออเดอร์"
+        centered
+        closeOnClickOutside={!busy}
+      >
+        <Text size="sm" mb="md">
+          ยืนยันยกเลิกบัตรคิว {queueCode} หรือไม่ สถานะจะเป็นยกเลิกทันที
+        </Text>
+        <Group justify="flex-end">
+          <Button type="button" variant="light" disabled={busy} onClick={() => setCancelOpen(false)}>
+            อยู่ต่อ
+          </Button>
+          <Button
+            type="button"
+            color="red"
+            loading={busy}
+            leftSection={<IconX size={16} />}
+            onClick={() => void confirmCancel()}
+          >
+            ยืนยันยกเลิก
+          </Button>
+        </Group>
+      </Modal>
     </Container>
   );
 }
