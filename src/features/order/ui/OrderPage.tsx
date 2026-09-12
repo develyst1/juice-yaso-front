@@ -94,6 +94,21 @@ export function OrderPage() {
     );
   }
 
+  function addFill(id: string, flavor: string, delta: number) {
+    setCrates((cs) =>
+      cs.map((c) => {
+        if (c.id !== id) return c;
+        const remaining = c.crateSize - filledCups(c);
+        const current = c.fills[flavor] ?? 0;
+        const next = Math.min(current + delta, current + remaining);
+        const fills = { ...c.fills };
+        if (next <= 0) delete fills[flavor];
+        else fills[flavor] = next;
+        return { ...c, fills };
+      }),
+    );
+  }
+
   function openCheckout() {
     setError(null);
     if (!allFull) {
@@ -136,18 +151,20 @@ export function OrderPage() {
 
   return (
     <Container size="sm" py="md">
-      <Image
-        src={stallImg.src}
-        alt="ร้าน Juice Yaso"
-        radius="lg"
-        mb="md"
-        style={{ animation: "pop 420ms ease" }}
-      />
+      <div className="order-hero">
+        <Image
+          src={stallImg.src}
+          alt="ร้าน Juice Yaso"
+          fit="cover"
+          h="100%"
+          w="100%"
+        />
+      </div>
       <Title order={2} c="brand.9" mb={4}>
         จัดลังน้ำเกร็ดหิมะ
       </Title>
       <Text c="dimmed" mb="md">
-        แตะแก้วสีเพิ่มรส · คละในลังเดียวกันได้ · ไม่ต้องพิมพ์จำนวน
+        แตะ +5 +10 หรือเต็มที่เหลือ · คละรสในลังได้ · ไม่ต้องพิมพ์จำนวน
       </Text>
 
       {error && (
@@ -223,8 +240,8 @@ export function OrderPage() {
                         flavor={String(f.code)}
                         nameTh={f.nameTh}
                         cups={cups}
-                        canPlus={left > 0}
-                        onPlus={() => setFill(crate.id, String(f.code), cups + 1)}
+                        remaining={left}
+                        onAdd={(n) => addFill(crate.id, String(f.code), n)}
                         onMinus={() => setFill(crate.id, String(f.code), cups - 1)}
                       />
                     );
@@ -316,6 +333,17 @@ export function OrderPage() {
 
       <style>{`
         @keyframes pop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+        .order-hero {
+          height: 136px;
+          border-radius: 16px;
+          overflow: hidden;
+          margin-bottom: 16px;
+          animation: pop 420ms ease;
+        }
+        .order-hero img { width: 100%; height: 100%; object-fit: cover; }
+        @media (min-width: 768px) {
+          .order-hero { height: 200px; }
+        }
       `}</style>
     </Container>
   );

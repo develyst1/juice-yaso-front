@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionIcon, Group, Stack, Text } from "@mantine/core";
+import { ActionIcon, Button, Group, Stack, Text, UnstyledButton } from "@mantine/core";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import { FLAVOR_COLOR } from "@/shared/lib/flavors";
 
@@ -8,18 +8,19 @@ export function FlavorStepper({
   nameTh,
   flavor,
   cups,
-  canPlus,
-  onPlus,
+  remaining,
+  onAdd,
   onMinus,
 }: {
   nameTh: string;
   flavor: string;
   cups: number;
-  canPlus: boolean;
-  onPlus: () => void;
+  remaining: number;
+  onAdd: (n: number) => void;
   onMinus: () => void;
 }) {
   const color = FLAVOR_COLOR[flavor] ?? "#EA580C";
+  const canPlus = remaining > 0;
   return (
     <Stack align="center" gap={6} style={{ minWidth: 72 }}>
       <div
@@ -64,12 +65,50 @@ export function FlavorStepper({
           radius="xl"
           size="lg"
           disabled={!canPlus}
-          onClick={onPlus}
+          onClick={() => onAdd(1)}
           aria-label={`เพิ่ม${nameTh}`}
         >
           <IconPlus size={18} />
         </ActionIcon>
       </Group>
+      <Group gap={4} justify="center">
+        {[5, 10].map((n) => (
+          <UnstyledButton
+            key={n}
+            type="button"
+            disabled={!canPlus}
+            onClick={() => onAdd(n)}
+            aria-label={`เพิ่ม ${n} แก้ว${nameTh}`}
+            style={{
+              minWidth: 32,
+              height: 26,
+              padding: "0 8px",
+              borderRadius: 999,
+              fontSize: 12,
+              fontWeight: 700,
+              color: canPlus ? "#C2410C" : "#A3A3A3",
+              background: canPlus ? "#FFF7ED" : "#F5F5F5",
+              border: `1px solid ${canPlus ? "#FDBA74" : "#E5E5E5"}`,
+              cursor: canPlus ? "pointer" : "not-allowed",
+            }}
+          >
+            +{n}
+          </UnstyledButton>
+        ))}
+      </Group>
+      <Button
+        type="button"
+        size="compact-xs"
+        variant="light"
+        color="brand"
+        radius="xl"
+        disabled={!canPlus}
+        onClick={() => onAdd(remaining)}
+        aria-label={`เต็มที่เหลือ${nameTh}`}
+        styles={{ root: { fontSize: 11, paddingInline: 8 } }}
+      >
+        เต็มที่เหลือ
+      </Button>
     </Stack>
   );
 }
