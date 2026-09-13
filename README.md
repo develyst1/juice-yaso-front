@@ -22,4 +22,4 @@ cp .env.example .env.local
 npm install
 npm run dev
 ```
-back `:3000` · front `:3001` · แอดมินใส่ `ADMIN_TOKEN` ใน `/admin` (sessionStorage)
+back `:4013` · front `:3022` · แอดมินใส่ `ADMIN_TOKEN` ใน `/admin` (sessionStorage)
